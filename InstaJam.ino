@@ -1,5 +1,5 @@
 /*
- * Jamify
+ * InstaJam
  * 
  * At the push of a button, program takes input from a microphone, identifies and classifies and prints key of tune being played
  * 
@@ -287,7 +287,7 @@ void halfNoteArray(float freq){//listens for halfnotes, prints unique array
 }
 
 
-bool existsInArray(const char *characteristic){
+bool existsInArray(const char *characteristic){//returns whether or not an element exists in an array
   int z;
   for (z=0;z<arraySize;z++){
     if (halfNotes[z] == characteristic)
@@ -321,9 +321,9 @@ Major Keys                     Characteristic Note
 
 */
 
-void findKey(){
+void findKey(){//Depending on the notes identified, function returns the key to match
   switch (l){
-    case 0:
+s    case 0:
       Serial.print("Key: C");
       break;
     case 1:
@@ -388,7 +388,7 @@ void findKey(){
   }
 }
 
-void deleteArray(){
+void deleteArray(){//Resets contents of array
   int s;
   for (s=0;s<arraySize;s++){
     halfNotes[s]="";
@@ -397,9 +397,13 @@ void deleteArray(){
 
 void loop(){
 
+  //Start clock
   unsigned long currentMillis = millis();
+
+  //Depending on the state of a button, the program will take a different path
   buttonState = digitalRead(buttonPin);
-  
+
+  //When button is pressed, program begins listening
   if (buttonState == HIGH){
     l=0;  //reset variables      
     done=false;
@@ -432,6 +436,7 @@ void loop(){
   Serial.print("\n");
 */
 
+  //When listening mode is on, check that reading is within bounds
   if (openMic == HIGH){
 //    checkClipping()
     if (checkMaxAmp>ampThreshold){
@@ -442,14 +447,15 @@ void loop(){
         freq = 38462/float(period);//calculate frequency timer rate/period        
       }
    
-
+    //Characterize note, independently of octave
     freq = scaleDown(freq);
+
+    //Identify note based on frequency
     note = freqTree(freq);
+
+    //Listen for characteristic half notes and print unique key
     halfNoteArray(freq);
     
     }
   }
-
-
 }
-
